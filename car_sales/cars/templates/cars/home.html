@@ -1,0 +1,50 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2 class="py-5">The Car Management Website Is Fully Functional But 999% ফকিরা 🤔</h2>
+  <!-- Insert your homepage text and picture here -->
+
+  <!-- Filter Form -->
+  <form method="get" class="mb-4">
+    <div class="form-group">
+      <label for="brandSelect">Filter by Brand</label>
+      <select class="form-control" id="brandSelect" name="brand" onchange="this.form.submit()">
+        <option value="">All Brands</option>
+        {% for brand in brands %}
+          <option value="{{ brand.name }}" {% if request.GET.brand == brand.name %}selected{% endif %}>
+            {{ brand.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <div class="container mt-4">
+    <div class="row">
+      {% for car in cars %}
+        <div class="col-md-4 col-sm-6 mb-4">
+          <div class="card">
+            <!-- Link the image to the car detail page -->
+            <a href="{% url 'car_detail' car.id %}">
+              <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.title }}">
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">{{ car.title }}</h5>
+              <p class="card-text">{{ car.price }}</p>
+              <p class="card-text">{{ car.description }}</p>
+              <!-- Display brand name -->
+              <p class="card-text">Brand: {{ car.brand.name }}</p>
+              <!-- Add more car details if needed -->
+              {% if user.is_authenticated %}
+                <a href="{% url 'place_order' car.id %}" class="btn btn-primary">Buy Now</a>
+              {% else %}
+                <!-- Link the title to the car detail page -->
+                <a href="{% url 'car_detail' car.id %}" class="btn btn-secondary">View Details</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

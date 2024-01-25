@@ -1,0 +1,45 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>{{ car.title }}</h2>
+  <div class="card mb-4">
+    <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.title }}">
+    <div class="card-body">
+      <p class="card-text">{{ car.description }}</p>
+      <p class="card-text">Price: {{ car.price }}</p>
+      <p class="card-text">Brand: {{ car.brand.name }}</p>
+      <p class="card-text">Available: {{ car.quantity }}</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'place_order' car.id %}" class="btn btn-primary">Buy Now</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Comments Section -->
+  <div class="comments">
+    <h3>Comments</h3>
+    {% for comment in comments %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5 class="card-title">{{ comment.name }}</h5>
+          <p class="card-text">{{ comment.comment }}</p>
+          <small class="text-muted">Posted on {{ comment.created_at|date:"Y-m-d H:i" }}</small>
+        </div>
+      </div>
+    {% empty %}
+      <p>No comments yet.</p>
+    {% endfor %}
+  </div>
+
+  {% if user.is_authenticated %}
+    <!-- Comment Form -->
+    <div class="comment-form mt-4">
+      <h4>Add a comment</h4>
+      <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-success">Post comment</button>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}

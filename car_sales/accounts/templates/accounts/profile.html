@@ -1,0 +1,52 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Profile</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="profile-info card mb-4">
+          <div class="card-body">
+            <h3 class="card-title">Your Profile</h3>
+            <p>Username: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>First Name: {{ user.first_name }}</p>
+            <p>Last Name: {{ user.last_name }}</p>
+            {% if user.profile_picture %}
+              <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="img-fluid">
+            {% endif %}
+            <button id="edit-profile-btn" class="btn btn-primary mt-3">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="profile-edit card mb-4" style="display: none;">
+          <div class="card-body">
+            <h3 class="card-title">Edit Profile</h3>
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-success">Save changes</button>
+              <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  document.getElementById('edit-profile-btn').addEventListener('click', function() {
+    document.querySelector('.profile-info').style.display = 'none';
+    document.querySelector('.profile-edit').style.display = 'block';
+  });
+
+  document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+    document.querySelector('.profile-edit').style.display = 'none';
+    document.querySelector('.profile-info').style.display = 'block';
+  });
+</script>
+{% endblock %}
